@@ -3,13 +3,10 @@ import { Mona_Sans, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const geistSans = Mona_Sans({
+const monaSans = Mona_Sans({
   variable: "--font-mona-sans",
   subsets: ["latin"],
 });
-
 
 export const metadata: Metadata = {
   title: "MockMate",
@@ -23,10 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={cn("dark", "font-sans", geist.variable)}
+      lang="en" className="dark"
     >
-      <body className={`${Mona_Sans} antialiased`}>{children}</body>
+      <body className={`${monaSans.className} antialiased pattern`}>{children}</body>
     </html>
   );
 }
