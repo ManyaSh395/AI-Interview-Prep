@@ -46,7 +46,7 @@ const AuthForm = ({type} : {type: FormType}) => {
     async function onSubmit(data: z.infer<typeof formSchema>) {
         try {
             if(type === 'sign-up') {
-                const {name, email, password} = values;
+                const {name, email, password} = data;
                 const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
                 const result = await signUp({
                     uid: userCredentials.user.uid,
@@ -55,8 +55,8 @@ const AuthForm = ({type} : {type: FormType}) => {
                     password,
                 })
 
-                if(!result.success) {
-                    toast.error(result.message);
+                if(!result?.success) {
+                    toast.error(result?.message);
                     return;
                 }
 
