@@ -20,15 +20,15 @@ import {
 } from "firebase/auth";
 
 import FormField from "./FormField";
-import {signUp } from "@/lib/actions/auth.action";
+import {signUp, signIn } from "@/lib/actions/auth.action";
 
 const authFormSchema = (type: FormType) => {
     return z.object({
         name: type === "sign-up" ? z.string().min(3) : z.string().optional(),
         email: z.string().email(),
         password: z.string().min(3),
-    })
-}
+    });
+};
 
 const AuthForm = ({type} : {type: FormType}) => {
    const router = useRouter();
@@ -41,37 +41,66 @@ const AuthForm = ({type} : {type: FormType}) => {
             email: "",
             password: "",
         },
-    })
+    });
 
-    async function onSubmit(data: z.infer<typeof formSchema>) {
+    const onSubmit = async (data: z.infer<typeof formSchema>) => {
         try {
-            if(type === 'sign-up') {
+            if(type === "sign-up") {
                 const {name, email, password} = data;
-                const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+
+                console.log("Before Firebase Auth");
+                const userCredential = await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+                console.log("Firebase Auth Success", userCredential);
+
+                console.log("Calling server action");
                 const result = await signUp({
-                    uid: userCredentials.user.uid,
+                    uid: userCredential.user.uid,
                     name: name!,
                     email,
                     password,
-                })
+                });
+                console.log("Server action returned:", result);
 
                 if(!result?.success) {
                     toast.error(result?.message);
                     return;
                 }
 
-                toast.success("Account created successfully. " +
-                    "Please sign in");
+                toast.success("Account created successfully. Please sign in");
+
+                console.log("Redirecting...");
                 router.push("/sign-in");
             } else {
-                toast.success("Signed in successfully. ");
+                const {email, password} = data;
+                const userCredential = await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+                const idToken = await userCredential.user.getIdToken();
+                if(!idToken) {
+                    toast.error("Sign in failed. Please try again.");
+                    return;
+                }
+
+                await signIn({
+                    email,
+                    idToken,
+                });
+
+                toast.success("Signed in successfully.");
                 router.push("/");
             }
         } catch(error) {
             console.log(error);
             toast.error(`There was an error: ${error}`)
         }
-    }
+    };
 
     const isSignIn = type === "sign-in";
     return (

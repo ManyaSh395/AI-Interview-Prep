@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Mona_Sans, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
+
 
 const monaSans = Mona_Sans({
   variable: "--font-mona-sans",
@@ -23,7 +25,10 @@ export default function RootLayout({
       lang="en" className="dark"
     >
       <body
-          className={`${monaSans.className} antialiased pattern`}>{children}
+          className={`${monaSans.className} antialiased pattern`}>
+      {children}
+
+        <Toaster />
       </body>
     </html>
   );
