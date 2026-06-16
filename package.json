@@ -9,9 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.82",
     "@hookform/resolvers": "^5.4.0",
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/sdk-trace-base": "^2.8.0",
+    "@vapi-ai/web": "^2.5.2",
+    "ai": "^6.0.206",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.21",
