@@ -6,6 +6,12 @@ function initFirebaseAdmin(){
     const apps = getApps();
 
     if(!apps.length) {
+        console.log({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            email: process.env.FIREBASE_CLIENT_EMAIL,
+            privateKeyExists: !!process.env.FIREBASE_PRIVATE_KEY,
+        });
+
         initializeApp ({
             credential: cert({
                 projectId: process.env.FIREBASE_PROJECT_ID,
